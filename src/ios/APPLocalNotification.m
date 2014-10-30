@@ -408,6 +408,7 @@
          [NSNotification notificationWithName:CDVLocalNotification
                                        object:localNotification]];
     }
+
 }
 
 /**
@@ -421,6 +422,12 @@
                                                 defaultCenter];
 
     eventQueue = [[NSMutableArray alloc] init];
+
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+        if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
+          [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound categories:nil]];
+        }
+    #endif
 
     [notificationCenter addObserver:self
                            selector:@selector(didReceiveLocalNotification:)
